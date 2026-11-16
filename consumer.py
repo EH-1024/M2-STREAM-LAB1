@@ -11,17 +11,21 @@ import time
 from queue import Queue
 
 class Consumer:
-    def __init__(self, q):
+    def __init__(self, q, delay=0.5):
         """
         PARAMETERS:
         - q : the shared queue (simulated topic)
+        - delay : time to wait while processing each event (float)
 
         TODO:
         - Store the queue.
         - Initialize any state variables you may want later,
           e.g. a running total for stateful computations.
         """
-        
+        self.q = q
+        self.delay = delay
+        self.running_total = 0
+
 
     def start(self):
         """
@@ -32,6 +36,11 @@ class Consumer:
         - Print the event received.
         - Pass it to the process() function.
         """
+        while True:
+            event = self.q.get()
+            print(f"Received event: {event}")
+            self.process(event)
+
     
 
     def process(self, event):
@@ -42,6 +51,10 @@ class Consumer:
         - Implement optional filtering conditions.
         - Update any state (example: running total).
         """
+        time.sleep(self.delay)  # Simulate processing time
+        amount = float(event.get("amount", 0))
+        self.running_total += amount
+        print(f"Processed event. Running total: {self.running_total}")
    
 
 # Debugging test

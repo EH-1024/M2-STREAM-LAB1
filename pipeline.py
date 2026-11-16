@@ -24,7 +24,18 @@ def main():
         python pipeline.py
     and observe live streaming behavior.
     """
+    shared_queue = Queue()
+    producer = CSVProducer("transactions.csv", shared_queue, delay=1.0)
+    consumer = Consumer(shared_queue, delay=1.0)
 
+    producer_thread = threading.Thread(target=producer.start)
+    consumer_thread = threading.Thread(target=consumer.start)
+
+    producer_thread.start()
+    consumer_thread.start()
+
+    producer_thread.join()
+    consumer_thread.join()
 
 if __name__ == "__main__":
     print("Starting the Python Streaming Pipeline...")
